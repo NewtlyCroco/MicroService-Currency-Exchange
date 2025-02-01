@@ -2,19 +2,89 @@
 
 {% block body %}
     <h1>{{ app_data['description'] }}</h1>
-    <h2>Services page</h2>
-    <p class="lead">Use this document as a way to quickly start any new project.
-        <br> All you get is this text and a mostly barebones HTML document.</p>
-    <div> Now updated to Bootstrap (Version 5.3.0) and jQuery 3.6.3</div>
-    <input type="search" list="currency" placeholder="Pick a common currency">
-    <datalist id="currency">
-        <option value="US dollar (USD)">
-        <option value="Euro (EUR)">
-        <option value="Japanese yen (JPY)">
-        <option value="Pound sterling (GBP)">
-        <option value="Australian dollar (AUD)">
-        <option value="Canadian dollar (CAD)">
-        <option value="Swiss franc (CHF)">
-        <option value="Chinese renminbi (CNH)">
-    </datalist>
+    <h2>Service Page</h2>
+    <p class="lead">Use a variety of combinations of the most popular currrency, to make any conversion with any amount and reeive informationa about the exchange!</p>
+    <div> The Redis server logs all conversion rates for you for 5 minutes, which is the typical significant time a currency amount could change</div>
+
+    <!-- Currency Selection Input with HTMX -->
+    <div class="mt-4">
+        <label for="currencyInput" class="form-label">Select a Currency (This will be your original currency)</label>
+        <input 
+            type="text" 
+            id="currencyInput" 
+            name="currency" 
+            list="currencyStart" 
+            placeholder="Pick a common currency" 
+            class="form-control"
+            hx-post="/process_currency" 
+            hx-trigger="input" 
+        >
+        <datalist id="currencyStart">
+            <option value="US dollar (USD)" />
+            <option value="Euro (EUR)" />
+            <option value="Japanese yen (JPY)" />
+            <option value="Pound sterling (GBP)" />
+            <option value="Australian dollar (AUD)" />
+            <option value="Canadian dollar (CAD)" />
+            <option value="Swiss franc (CHF)" />
+        </datalist>
+    </div>
+
+
+    <div class="mt-5">
+        <label for="currencyInput2" class="form-label">Select a Currency (Which currency you would like to convert original to)</label>
+        <input 
+            type="text" 
+            id="currencyInput2" 
+            name="currency2" 
+            list="currencyStart2" 
+            placeholder="Pick a common currency" 
+            class="form-control"
+            hx-post="/process_post_currency" 
+            hx-trigger="input" 
+        >
+        <datalist id="currencyStart2">
+            <option value="US dollar (USD)" />
+            <option value="Euro (EUR)" />
+            <option value="Japanese yen (JPY)" />
+            <option value="Pound sterling (GBP)" />
+            <option value="Australian dollar (AUD)" />
+            <option value="Canadian dollar (CAD)" />
+            <option value="Swiss franc (CHF)" />
+        </datalist>
+    </div>
+
+
+    <div class="mb-3">
+        <label for="amountInput" class="form-label">Amount of Currency</label>
+        <input 
+            type="number" 
+            id="amountInput" 
+            name="amount" 
+            placeholder="Enter amount" 
+            class="form-control" 
+            step="0.01" 
+            min="0"
+            hx-post="/process_amount" 
+            hx-trigger="input changed delay:500ms" 
+        >
+    </div>
+
+    <!-- Submit Button -->
+    <button 
+            type="button" 
+            hx-post="/convert_currency" 
+            hx-trigger="click" 
+            hx-target="#conversionResult" 
+            hx-include="#currencyForm" 
+            class="btn btn-primary"
+        >
+            Convert
+        </button>
+    </form>
+
+    <!-- Display the conversion result -->
+    <div id="conversionResult" class="mt-3"></div>
+
+    
 {% endblock %}
